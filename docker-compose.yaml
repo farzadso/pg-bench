@@ -41,6 +41,26 @@ services:
       timeout: 5s
       retries: 5
 
+  benchmark_api_db_pg:
+    build:
+      context: .docker/postgres/
+      dockerfile: Dockerfile.dev
+    container_name: benchmark-api-db-pg-container
+    environment:
+      POSTGRES_USER: benchmark-api-db-pg
+      POSTGRES_PASSWORD: benchmark-api-db-pg
+      POSTGRES_DB: benchmark-api-db-pg
+    networks:
+      - user-network
+    ports:
+      - "9124:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U benchmark-api-db-pg"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
   user-network:
     driver: bridge
